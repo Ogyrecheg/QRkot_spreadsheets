@@ -3,6 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from app.services.constants import MIN_FULL_AMOUNT
+
 
 class DonationBase(BaseModel):
     full_amount: Optional[int] = Field(None, gt=0)
@@ -10,7 +12,7 @@ class DonationBase(BaseModel):
 
 
 class DonationCreate(DonationBase):
-    full_amount: int = Field(gt=0)
+    full_amount: int = Field(gt=MIN_FULL_AMOUNT)
 
 
 class DonationResponse(DonationBase):

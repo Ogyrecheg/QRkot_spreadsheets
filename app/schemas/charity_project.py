@@ -3,11 +3,23 @@ from typing import Optional
 
 from pydantic import BaseModel, Extra, Field, validator
 
+from app.services.constants import (CHARITYPROJECT_DESCRIPTION_MIN_LENGTH,
+                                    CHARITYPROJECT_NAME_LENGTH,
+                                    CHARITYPROJECT_NAME_MIN_LENGTH,
+                                    MIN_FULL_AMOUNT)
+
 
 class CharityProjectBase(BaseModel):
-    name: Optional[str] = Field(None, min_length=1, max_length=100)
-    description: Optional[str] = Field(None, min_length=1)
-    full_amount: Optional[int] = Field(None, gt=0)
+    name: Optional[str] = Field(
+        None,
+        min_length=CHARITYPROJECT_NAME_MIN_LENGTH,
+        max_length=CHARITYPROJECT_NAME_LENGTH,
+    )
+    description: Optional[str] = Field(
+        None,
+        min_length=CHARITYPROJECT_DESCRIPTION_MIN_LENGTH,
+    )
+    full_amount: Optional[int] = Field(None, gt=MIN_FULL_AMOUNT)
 
     class Config:
         extra = Extra.forbid
@@ -24,9 +36,12 @@ class CharityProjectUpdate(CharityProjectBase):
 
 
 class CharityProjectCreate(CharityProjectBase):
-    name: str = Field(min_length=1, max_length=100)
-    description: str = Field(min_length=1)
-    full_amount: int = Field(gt=0)
+    name: str = Field(
+        min_length=CHARITYPROJECT_NAME_MIN_LENGTH,
+        max_length=CHARITYPROJECT_NAME_LENGTH,
+    )
+    description: str = Field(min_length=CHARITYPROJECT_DESCRIPTION_MIN_LENGTH)
+    full_amount: int = Field(gt=MIN_FULL_AMOUNT)
 
     @validator('name', 'description')
     def none_and_empty_not_allowed(cls, value: str):

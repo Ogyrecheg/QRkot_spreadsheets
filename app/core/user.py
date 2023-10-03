@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.core.db import get_async_session
 from app.models.user import User
 from app.schemas.user import UserCreate
+from app.services.constants import JWT_LIFETIME_SECONDS, MIN_LENGTH_PASSWORD
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
@@ -22,7 +23,10 @@ bearer_transport = BearerTransport(tokenUrl='auth/jwt/login')
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=settings.secret, lifetime_seconds=3600)
+    return JWTStrategy(
+        secret=settings.secret,
+        lifetime_seconds=JWT_LIFETIME_SECONDS,
+    )
 
 
 auth_backend = AuthenticationBackend(
@@ -38,7 +42,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             password: str,
             user: Union[UserCreate, User],
     ) -> None:
-        if len(password) < 3:
+        if len(password) < MIN_LENGTH_PASSWORD:
             raise InvalidPasswordException(
                 reason='Password should be at least 3 characters'
             )
