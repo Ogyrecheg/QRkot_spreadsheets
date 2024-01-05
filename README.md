@@ -96,3 +96,12 @@ uvicorn app.main:app --reload
 ```http
 http://127.0.0.1:5000/docs
 ```
+
+**Технологии:**
+- Python
+- FastAPI
+- SQLAlchemy
+- Google API
+
+### Автор проекта:
+[Шевченко Александр](https://github.com/Ogyrecheg)
